@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 export default function Register() {
   const { register } = useAuth();
+  const navigate = useNavigate();
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -25,6 +26,7 @@ export default function Register() {
     setLoading(true);
     try {
       await register(form.name, form.email, form.password);
+      navigate('/login', { state: { success: 'Registration successful! Please sign in with your credentials.' } });
     } catch (err) {
       setErrors({ server: err.response?.data?.message || 'Registration failed' });
     } finally {
