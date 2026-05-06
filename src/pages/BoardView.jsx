@@ -53,6 +53,7 @@ export default function BoardView() {
       await api.put(`/tasks/${taskId}`, { status: newStatus });
       fetchBoard();
     } catch (err) {
+      alert(err.response?.data?.message || 'Failed to update task status.');
       console.error('Failed to update task status:', err);
     }
   };
@@ -68,10 +69,12 @@ export default function BoardView() {
           <h1 className="text-3xl font-extrabold tracking-tight text-white">{board.title}</h1>
           {board.description && <p className="text-indigo-100 text-sm mt-1">{board.description}</p>}
         </div>
-        <button onClick={() => setShowCreate(true)}
-          className="bg-white text-indigo-700 font-extrabold px-5 py-2.5 rounded-xl text-sm shadow hover:shadow-md hover:bg-indigo-50 transition transform active:scale-95 duration-150 whitespace-nowrap z-10">
-          ➕ Add Task
-        </button>
+        {user?.role === 'admin' && (
+          <button onClick={() => setShowCreate(true)}
+            className="bg-white text-indigo-700 font-extrabold px-5 py-2.5 rounded-xl text-sm shadow hover:shadow-md hover:bg-indigo-50 transition transform active:scale-95 duration-150 whitespace-nowrap z-10">
+            ➕ Add Task
+          </button>
+        )}
         <div className="absolute -right-6 -bottom-6 w-24 h-24 bg-indigo-500/30 rounded-full blur-xl pointer-events-none"></div>
       </div>
 
