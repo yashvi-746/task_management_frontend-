@@ -84,8 +84,8 @@ export default function AdminUsers() {
           Loading system users...
         </div>
       ) : (
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-          <table className="w-full text-sm border-collapse">
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden overflow-x-auto">
+          <table className="w-full text-sm border-collapse min-w-[700px]">
             <thead className="bg-gray-50 border-b border-gray-100">
               <tr>
                 <th className="text-left px-6 py-4 text-gray-500 font-semibold tracking-wider">NAME</th>
@@ -103,11 +103,11 @@ export default function AdminUsers() {
                       <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs font-bold">
                         {u.name?.[0]?.toUpperCase() || 'U'}
                       </div>
-                      <span className="font-bold text-gray-800">{u.name}</span>
+                      <span className="font-bold text-gray-800 whitespace-nowrap">{u.name}</span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-gray-600 font-medium">{u.email}</td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 text-gray-600 font-medium whitespace-nowrap">{u.email}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
                       u.role === 'admin' 
                         ? 'bg-amber-50 text-amber-700 border border-amber-100' 
@@ -116,7 +116,7 @@ export default function AdminUsers() {
                       {u.role === 'admin' ? '👑 Admin' : '👥 User'}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-gray-400 font-medium">{new Date(u.createdAt).toLocaleDateString()}</td>
+                  <td className="px-6 py-4 text-gray-400 font-medium whitespace-nowrap">{new Date(u.createdAt).toLocaleDateString()}</td>
                   <td className="px-6 py-4 text-right">
                     {u.role !== 'admin' && (
                       <button onClick={() => setConfirmDeleteId(u._id)}

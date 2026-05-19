@@ -64,8 +64,8 @@ export default function AdminBoards() {
           <div className="animate-pulse">Loading board statistics...</div>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-          <table className="w-full text-sm border-collapse">
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden overflow-x-auto">
+          <table className="w-full text-sm border-collapse min-w-[800px]">
             <thead className="bg-gray-50 border-b border-gray-100">
               <tr>
                 <th className="text-left px-6 py-4 text-gray-500 font-semibold tracking-wider">BOARD TITLE</th>
@@ -91,16 +91,16 @@ export default function AdminBoards() {
                       <div className="w-6 h-6 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs font-semibold">
                         {b.owner?.name?.[0]?.toUpperCase() || 'O'}
                       </div>
-                      <span className="text-gray-700 font-medium">{b.owner?.name || 'Unassigned'}</span>
+                      <span className="text-gray-700 font-medium whitespace-nowrap">{b.owner?.name || 'Unassigned'}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100 whitespace-nowrap">
                       👥 {b.members?.length || 0} Members
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-100">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-100 whitespace-nowrap">
                       📌 {b.taskCount || 0} Tasks
                     </span>
                   </td>

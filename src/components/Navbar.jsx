@@ -9,6 +9,7 @@ export default function Navbar() {
   const location = useLocation();
 
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [profileName, setProfileName] = useState(user?.name || '');
   const [profilePassword, setProfilePassword] = useState('');
@@ -16,16 +17,20 @@ export default function Navbar() {
   const [profileSuccess, setProfileSuccess] = useState('');
 
   const dropdownRef = useRef(null);
+  const mobileMenuRef = useRef(null);
 
   useEffect(() => {
     if (user) setProfileName(user.name);
   }, [user]);
 
-  // Close dropdown on click outside
+  // Close dropdowns on click outside
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setShowDropdown(false);
+      }
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target) && !event.target.closest('#mobile-menu-btn')) {
+        setShowMobileMenu(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -61,49 +66,63 @@ export default function Navbar() {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <nav className="bg-gradient-to-r from-indigo-600 via-indigo-700 to-indigo-800 text-white px-6 py-3.5 flex items-center justify-between shadow-md sticky top-0 z-50">
-      <div className="flex items-center gap-6">
-        <Link to="/dashboard" className="font-extrabold text-xl tracking-tight text-white hover:text-indigo-100 transition mr-2">📋 TaskBoard</Link>
-        
-        {/* Active Pill Styled Navigation Links */}
-        <Link to="/dashboard" className={`px-3 py-1.5 rounded-xl text-sm font-semibold transition duration-150 ${isActive('/dashboard') ? 'bg-white/15 border border-white/20 text-white shadow-sm' : 'text-indigo-100 hover:bg-white/10 hover:text-white'}`}>
-          Dashboard
+    <nav className="bg-gradient-to-r from-indigo-600 via-indigo-700 to-indigo-800 text-white px-4 md:px-6 py-3.5 flex items-center justify-between shadow-md sticky top-0 z-50">
+      <div className="flex items-center gap-4 md:gap-6">
+        <button 
+          id="mobile-menu-btn"
+          onClick={() => setShowMobileMenu(!showMobileMenu)}
+          className="md:hidden flex flex-col gap-1.5 p-1.5 focus:outline-none"
+        >
+          <div className="w-5 h-0.5 bg-white rounded-full"></div>
+          <div className="w-5 h-0.5 bg-white rounded-full"></div>
+          <div className="w-5 h-0.5 bg-white rounded-full"></div>
+        </button>
+      
+        <Link to="/dashboard" className="font-extrabold text-lg md:text-xl tracking-tight text-white hover:text-indigo-100 transition mr-0 md:mr-2 flex items-center gap-2">
+          <span className="hidden sm:inline">📋</span> TaskBoard
         </Link>
+        
+        {/* Desktop Navigation Links */}
+        <div className="hidden md:flex items-center gap-2">
+          <Link to="/dashboard" className={`px-3 py-1.5 rounded-xl text-sm font-semibold transition duration-150 ${isActive('/dashboard') ? 'bg-white/15 border border-white/20 text-white shadow-sm' : 'text-indigo-100 hover:bg-white/10 hover:text-white'}`}>
+            Dashboard
+          </Link>
 
-        {user?.role === 'admin' && (
-          <>
-            <Link to="/admin/boards" className={`px-3 py-1.5 rounded-xl text-sm font-semibold transition duration-150 ${isActive('/admin/boards') ? 'bg-white/15 border border-white/20 text-white shadow-sm' : 'text-indigo-100 hover:bg-white/10 hover:text-white'}`}>
-              All Boards
-            </Link>
-            <Link to="/admin/users" className={`px-3 py-1.5 rounded-xl text-sm font-semibold transition duration-150 ${isActive('/admin/users') ? 'bg-white/15 border border-white/20 text-white shadow-sm' : 'text-indigo-100 hover:bg-white/10 hover:text-white'}`}>
-              Users
-            </Link>
-          </>
-        )}
+          {user?.role === 'admin' && (
+            <>
+              <Link to="/admin/boards" className={`px-3 py-1.5 rounded-xl text-sm font-semibold transition duration-150 ${isActive('/admin/boards') ? 'bg-white/15 border border-white/20 text-white shadow-sm' : 'text-indigo-100 hover:bg-white/10 hover:text-white'}`}>
+                All Boards
+              </Link>
+              <Link to="/admin/users" className={`px-3 py-1.5 rounded-xl text-sm font-semibold transition duration-150 ${isActive('/admin/users') ? 'bg-white/15 border border-white/20 text-white shadow-sm' : 'text-indigo-100 hover:bg-white/10 hover:text-white'}`}>
+                Users
+              </Link>
+            </>
+          )}
+        </div>
       </div>
 
-      <div className="flex items-center gap-4 relative" ref={dropdownRef}>
+      <div className="flex items-center gap-2 md:gap-4 relative" ref={dropdownRef}>
         {/* Beautiful Functional User Dropdown Trigger */}
         <button 
           onClick={() => setShowDropdown(!showDropdown)}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-xl hover:bg-white/10 transition active:scale-95 duration-150 outline-none select-none">
+          className="flex items-center gap-2 px-2 md:px-3 py-1.5 rounded-xl hover:bg-white/10 transition active:scale-95 duration-150 outline-none select-none">
           <div className="w-8 h-8 rounded-full bg-indigo-500/50 border border-white/30 flex items-center justify-center font-bold uppercase text-white shadow-sm text-sm">
             {user?.name?.charAt(0)}
           </div>
-          <span className="text-sm font-semibold text-white">
+          <span className="hidden md:inline text-sm font-semibold text-white">
             {user?.name}
           </span>
           {user?.role === 'admin' ? (
-            <span className="bg-amber-400 text-amber-950 text-[10px] px-2 py-0.5 rounded-full border border-amber-300 font-extrabold shadow-sm">Admin</span>
+            <span className="hidden sm:inline bg-amber-400 text-amber-950 text-[10px] px-2 py-0.5 rounded-full border border-amber-300 font-extrabold shadow-sm">Admin</span>
           ) : (
-            <span className="bg-blue-400 text-blue-950 text-[10px] px-2 py-0.5 rounded-full border border-blue-300 font-extrabold shadow-sm">User</span>
+            <span className="hidden sm:inline bg-blue-400 text-blue-950 text-[10px] px-2 py-0.5 rounded-full border border-blue-300 font-extrabold shadow-sm">User</span>
           )}
-          <span className="text-indigo-200 text-xs transition duration-150 select-none">{showDropdown ? '▲' : '▼'}</span>
+          <span className="text-indigo-200 text-xs transition duration-150 select-none hidden sm:inline">{showDropdown ? '▲' : '▼'}</span>
         </button>
 
         {/* Floating User Options Dropdown */}
         {showDropdown && (
-          <div className="absolute right-0 top-12 bg-white rounded-2xl shadow-2xl border border-gray-100 text-slate-800 w-64 p-3 flex flex-col gap-2 z-50 animate-in fade-in slide-in-from-top-3 duration-150">
+          <div className="absolute right-0 top-12 bg-white rounded-2xl shadow-2xl border border-gray-100 text-slate-800 w-56 md:w-64 p-3 flex flex-col gap-2 z-50 animate-in fade-in slide-in-from-top-3 duration-150">
             <div className="px-3 py-2 border-b border-gray-50 flex flex-col">
               <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Signed In As</span>
               <span className="text-sm font-bold text-slate-800 mt-0.5 truncate">{user?.name}</span>
@@ -124,10 +143,39 @@ export default function Navbar() {
           </div>
         )}
       </div>
+      
+      {/* Mobile Menu Dropdown */}
+      {showMobileMenu && (
+        <div ref={mobileMenuRef} className="md:hidden absolute top-16 left-4 right-4 bg-white rounded-2xl shadow-2xl border border-gray-100 text-slate-800 p-3 flex flex-col gap-2 z-50 animate-in fade-in slide-in-from-top-3 duration-150">
+          <Link 
+            to="/dashboard" 
+            onClick={() => setShowMobileMenu(false)}
+            className={`px-4 py-3 rounded-xl text-sm font-bold transition duration-150 ${isActive('/dashboard') ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-gray-50'}`}>
+            📊 Dashboard
+          </Link>
+
+          {user?.role === 'admin' && (
+            <>
+              <Link 
+                to="/admin/boards" 
+                onClick={() => setShowMobileMenu(false)}
+                className={`px-4 py-3 rounded-xl text-sm font-bold transition duration-150 ${isActive('/admin/boards') ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-gray-50'}`}>
+                📁 All Boards
+              </Link>
+              <Link 
+                to="/admin/users" 
+                onClick={() => setShowMobileMenu(false)}
+                className={`px-4 py-3 rounded-xl text-sm font-bold transition duration-150 ${isActive('/admin/users') ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-gray-50'}`}>
+                👥 Users
+              </Link>
+            </>
+          )}
+        </div>
+      )}
 
       {/* Beautiful Glassmorphic Update Profile Modal */}
       {showProfileModal && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-gray-100/80 animate-in fade-in zoom-in duration-150 text-slate-800">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-extrabold text-gray-800">Account Settings</h3>
@@ -206,3 +254,4 @@ export default function Navbar() {
     </nav>
   );
 }
+
